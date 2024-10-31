@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Threat Detection</title>
+</head>
+<body>
+    <h1>Live Video and Audio Threat Detection</h1>
+    
+    <!-- Display Live Video Stream -->
+    <div>
+        <img src="{{ url_for('video_feed') }}" width="720" height="480" alt="Live Video Stream">
+    </div>
+
+    <!-- Audio Recording Button -->
+    <div>
+        <button id="start-recording">Start Audio Recording</button>
+        </div>
+        <button id="stop-recording">Stop Audio Recording</button>
+    </div>
+
+    <!-- Transcript and Threat Level Display -->
+    <div id="transcript"></div>
+    <div id="threat_level"></div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        document.getElementById("start-recording").addEventListener("click", async function () {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            
+            mediaRecorder.ondataavailable = function(event) {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = function() {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                audioChunks = [];
+
+                const formData = new FormData();
+                formData.append('audio', audioBlob);
+
+                // Send audio file to the server for analysis
+                fetch('/analyze_audio', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('transcript').innerText = "Transcript: " + data.transcript;
+                    document.getElementById('threat_level').innerText = "Threat Level: " + data.threat_level;
+                })
+                .catch(err => console.error("Error:", err));
+            };
+
+            mediaRecorder.start();
+        });
+
+        document.getElementById("stop-recording").addEventListener("click", function () {
+            mediaRecorder.stop();
+        });
+    </script>
+</body>
+</html>
