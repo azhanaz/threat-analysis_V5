@@ -1,0 +1,20 @@
+Text,Label
+"I have a knife in my bag.",threat
+"I'm going to the store.",non-threat
+"There's a gun in the classroom.",threat
+"Let's go for a walk.",non-threat
+"I hate you.",threat
+"I just want to go home.",non-threat
+"You'll pay for this.",threat
+"I wouldn’t trust him if I were you.",threat
+"I love hiking.",non-threat
+"Stay away from my stuff!",threat
+"Can you help me with this?",non-threat
+"I'll take care of you.",threat
+"What's the weather like?",non-threat
+"The last time I saw him, he was furious.",threat
+"She’s my friend.",non-threat
+"Don't make me angry!",threat
+"Everything will be fine.",non-threat
+"You're going to regret this.",threat
+"I can’t wait for the weekend.",non-threat
